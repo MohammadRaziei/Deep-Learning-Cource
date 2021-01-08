@@ -1,7 +1,6 @@
 import os
 import enum
 import re
-from pprint import pprint
 
 default_root = 'NWPU VHR-10 dataset'
 
