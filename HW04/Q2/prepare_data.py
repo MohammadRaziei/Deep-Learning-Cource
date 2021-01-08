@@ -1,6 +1,6 @@
 import os
-import enum
-import re
+import enum, re
+import matplotlib.pyplot as plt
 
 default_root = 'NWPU VHR-10 dataset'
 
@@ -51,3 +51,21 @@ def getGroundTruthList(number,root=default_root):
     return GroundTruthList
 
 
+
+
+def crop_image_obj(image, obj):
+  left,top = obj.top_left.get()
+  right,bottom = obj.right_bottom.get()
+  imageCrop = image[ top:bottom, left:right,:]
+  return imageCrop
+
+
+def prepare_data(number, root=default_root):
+  positive_folder = os.path.join(root, 'positive image set')
+  filename = os.path.join(positive_folder, '{:03.0f}.jpg'.format(number))
+  groundTruthList = getGroundTruthList(number, root=root)
+  image = plt.imread(filename)
+  cropped_images = [crop_image_obj(image, obj) for obj in groundTruthList]
+  classes = [obj.object_type for obj in groundTruthList]
+  return cropped_images, classes
+  
