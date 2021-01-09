@@ -80,3 +80,8 @@ def prepare_data(number, root=default_root):
     classes = [obj.object_type for obj in groundTruthList]
     return cropped_images, classes
     
+
+def get_number_of_files(root=default_root):
+    number_of_labeled_files = len([name for name in os.listdir(os.path.join(root,'ground truth')) if name.endswith('.txt')])
+    number_of_nonlabeled_files = len([name for name in os.listdir(os.path.join(root,'negative image set')) if name.endswith('.jpg')])
+    return number_of_labeled_files, number_of_nonlabeled_files
