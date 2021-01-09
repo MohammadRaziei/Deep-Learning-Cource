@@ -61,12 +61,21 @@ def crop_image_obj(image, obj):
     imageCrop = image[ top:bottom, left:right,:]
     return imageCrop
 
-
-def prepare_data(number, root=default_root):
+def load_positive(number, root=default_root):
     positive_folder = os.path.join(root, 'positive image set')
     filename = os.path.join(positive_folder, '{:03.0f}.jpg'.format(number))
-    groundTruthList = getGroundTruthList(number, root=root)
     image = plt.imread(filename)
+    return image
+
+def load_negative(number, root=default_root):
+    negative_folder = os.path.join(root, 'negative image set')
+    filename = os.path.join(negative_folder, '{:03.0f}.jpg'.format(number))
+    image = plt.imread(filename)
+    return image
+
+def prepare_data(number, root=default_root):
+    image = load_positive(number, root=root)
+    groundTruthList = getGroundTruthList(number, root=root)
     cropped_images = [crop_image_obj(image, obj) for obj in groundTruthList]
     classes = [obj.object_type for obj in groundTruthList]
     return cropped_images, classes
