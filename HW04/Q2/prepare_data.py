@@ -15,6 +15,7 @@ class Point:
       return '({},{})'.format(self.x, self.y)
 
 class ObjectType(enum.Enum):
+    negative = 0
     airplane = 1
     ship = 2
     storageTank = 3
