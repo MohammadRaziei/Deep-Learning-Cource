@@ -17,12 +17,8 @@ class DataAugmentation(ImageDataGenerator):
 
     def work(self, n_images=5): 
         gen_flow = self.flow(self._data)
-        images = []
         rng = trange(n_images) if self.progressbar else range(n_images) 
-        for image_index in rng:
-            image = next(gen_flow)
-            images.append(image)
-        images = np.array(images)
+        images = np.array([next(gen_flow) for _ in rng])
         return images
 
     def get(self, n_images=5, images=None):
@@ -37,10 +33,9 @@ class DataAugmentation(ImageDataGenerator):
         plt.figure(figsize=(n_cols*4, n_rows*3))
         for image_index in range(n_images):
             for row in range(n_rows):
-            # print((n_rows, n_cols, image_index+1+row*n_cols))
-            plt.subplot(n_rows, n_cols, image_index+1+row*n_cols)
-            plt.axis('off')
-            plt.imshow(images[image_index][row].astype(np.uint8), vmin=0, vmax=255)
+                plt.subplot(n_rows, n_cols, image_index+1+row*n_cols)
+                plt.axis('off')
+                plt.imshow(images[image_index][row].astype(np.uint8), vmin=0, vmax=255)
         plt.subplots_adjust(hspace=-0.5)
         plt.show() 
 
