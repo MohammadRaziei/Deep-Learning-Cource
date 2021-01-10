@@ -39,6 +39,12 @@ class DataAugmentation(ImageDataGenerator):
         plt.subplots_adjust(hspace=-0.5)
         plt.show() 
 
+    def save_flow(self, num_iter=5, save_to_dir='.', batch_size=1, save_prefix='', save_format='jpeg', **keywords):
+        data = self._data; i = 0
+        for _ in self.flow(data, batch_size=batch_size, save_to_dir=save_to_dir, save_prefix=save_prefix, save_format=save_format, **keywords):
+            i += 1
+            if i >= num_iter: break  # otherwise the generator would loop indefinitely
+
 def resize_image(image, target_size=(100,100)):
     img = Image.fromarray(image)
     img = img.resize(target_size, Image.ANTIALIAS)
