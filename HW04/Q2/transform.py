@@ -1,7 +1,7 @@
 import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
-from tqdm import trange
+from tqdm import tqdm
 from PIL import Image
 
 
@@ -9,15 +9,20 @@ from PIL import Image
 # It help me to write following class
  
 class DataAugmentation(ImageDataGenerator):
-    def __init__(self, data, progressbar=False, fill_mode='constant', **keywords):
+    def __init__(self, data, progressbar=False, progressbar_module=None, fill_mode='constant', **keywords):
         super().__init__(fill_mode=fill_mode, dtype=data.dtype,**keywords)
         self._data = data
         self.fit(data)
-        self.progressbar = progressbar
+        if progressbar_module is None:
+            self.progressbar = progressbar
+            self._tqdm = tqdm 
+        else:
+            self.progressbar = True
+            self._tqdm = progressbar_module
 
     def work(self, n_images=5): 
         gen_flow = self.flow(self._data)
-        rng = trange(n_images) if self.progressbar else range(n_images) 
+        rng = self._tqdm(range(n_images)) if self.progressbar else range(n_images) 
         images = np.array([next(gen_flow) for _ in rng])
         return images
 
@@ -40,8 +45,8 @@ class DataAugmentation(ImageDataGenerator):
         plt.show() 
 
     def save_flow(self, num_iter=5, save_to_dir='.', batch_size=1, save_prefix='', save_format='jpeg', **keywords):
-        data = self._data; i = 0
-        for _ in self.flow(data, batch_size=batch_size, save_to_dir=save_to_dir, save_prefix=save_prefix, save_format=save_format, **keywords):
+        i = 0
+        for _ in self.flow(self._data, batch_size=batch_size, save_to_dir=save_to_dir, save_prefix=save_prefix, save_format=save_format, **keywords):
             i += 1
             if i >= num_iter: break  # otherwise the generator would loop indefinitely
 
